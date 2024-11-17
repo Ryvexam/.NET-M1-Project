@@ -50,7 +50,8 @@ namespace MonApp.Events
                 MinimumAge = request.MinimumAge,
                 Tags = request.Tags,
                 ImageUrl = request.ImageUrl,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = User.Identity.Name
             };
 
             Validator.ValidateObject(newEvent, new ValidationContext(newEvent), true);
@@ -126,6 +127,10 @@ namespace MonApp.Events
         public int? MinimumAge { get; set; }
         public List<string>? Tags { get; set; }
         public string? ImageUrl { get; set; }
+        
+        [Required]
+        public string? CreatedBy { get; set; }
+
     }
 
     public class EventResponse
