@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Events" xml:space="preserve">
+    <value>Événements</value>
+  </data>
+  <data name="BrowseEvents" xml:space="preserve">
+    <value>Parcourir les événements à venir</value>
+  </data>
+  <data name="CreateEvent" xml:space="preserve">
+    <value>Créer un événement</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Duplicate" xml:space="preserve">
+    <value>Dupliquer</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
+  <data name="DeleteConfirmation" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer cet événement ?</value>
+  </data>
+  <data name="DeletionError" xml:space="preserve">
+    <value>Erreur lors de la suppression</value>
+  </data>
+  <data name="Places" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="EventStatus_Draft" xml:space="preserve">
+    <value>Brouillon</value>
+  </data>
+  <data name="EventStatus_Published" xml:space="preserve">
+    <value>Publié</value>
+  </data>
+  <data name="EventStatus_Cancelled" xml:space="preserve">
+    <value>Annulé</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>S'inscrire</value>
+  </data>
+  <data name="SubscriptionError" xml:space="preserve">
+    <value>Erreur lors de l'inscription</value>
+  </data>
+  <data name="SubscriptionSuccess" xml:space="preserve">
+    <value>Inscription avec succès</value>
+  </data>
+  <data name="NoEvents" xml:space="preserve">
+    <value>Aucun évenement</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Erreur lors du Chargement</value>
+  </data>
+  <data name="EventDetails" xml:space="preserve">
+    <value>Détails de l'évenement</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="StartDateTime" xml:space="preserve">
+    <value>Début</value>
+  </data>
+  <data name="EndDateTime" xml:space="preserve">
+    <value>Fin</value>
+  </data>
+  <data name="MaxRegistrations" xml:space="preserve">
+    <value>Inscriptions Maximum</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Créé par</value>
+  </data>
+  <data name="Participants" xml:space="preserve">
+    <value>Participants</value>
+  </data>
+</root>

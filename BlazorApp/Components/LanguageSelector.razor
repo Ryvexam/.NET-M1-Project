@@ -1,0 +1,35 @@
+﻿@using System.Globalization
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject NavigationManager Navigation
+
+<div class="flex items-center space-x-3 px-4 py-2">
+    <label class="text-gray-100 font-medium">Culture:</label>
+    <select 
+        @bind="SelectedCulture" 
+        class="block w-40 rounded-lg bg-gray-700 border-gray-600 text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 hover:bg-gray-600 transition-colors duration-200">
+        @foreach (var culture in _availableCultures)
+        {
+            <option 
+                value="@culture" 
+                class="bg-gray-700 text-gray-100 hover:bg-emerald-600">
+                @culture.DisplayName
+            </option>
+        }
+    </select>
+</div>
+
+@code {
+    // List of available cultures
+    private CultureInfo[] _availableCultures = [new CultureInfo("en-US"), new CultureInfo("fr-FR")];
+    
+    public CultureInfo SelectedCulture
+    {
+        get => CultureInfo.CurrentCulture;
+        set
+        {
+            if (CultureInfo.CurrentCulture == value) return; // Avoid unnecessary changes
+            LocalStorage.SetItemAsStringAsync("BlazorCulture", value.Name); // Save to LocalStorage
+            Navigation.NavigateTo(Navigation.Uri, forceLoad: true); // Reload the page
+        }
+    }
+}

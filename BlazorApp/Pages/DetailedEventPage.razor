@@ -1,0 +1,170 @@
+@page "/events/{Id:int}"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Threading.Tasks
+@using Shared
+@using BlazorApp.Dico
+
+@attribute [Authorize]
+@inject IStringLocalizer<Translation> Localizer
+@inject IJSRuntime JsRuntime
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>@(_eventModel?.Title ?? Localizer[nameof(Translation.EventDetails)])</PageTitle>
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header Section -->
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <h1 class="text-3xl font-bold text-gray-900">@(_eventModel?.Title ?? Localizer[nameof(Translation.EventDetails)])</h1>
+                <button @onclick="GoBack" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    @Localizer[nameof(Translation.Back)]
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        @if (_eventModel == null)
+        {
+        <div class="flex justify-center items-center h-64">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+                <span class="text-gray-600">@Localizer[nameof(Translation.Loading)]</span>
+            </div>
+        </div>
+        }
+        else
+        {
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">@Localizer[nameof(Translation.EventDetails)]</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">ID: @_eventModel.Id</p>
+                    </div>
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <button @onclick="Subscribe" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                @Localizer[nameof(Translation.Subscribe)]
+                            </button>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">@Localizer[nameof(Translation.StartDateTime)]</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            @_eventModel.StartDateTime.ToString("dd/MM/yyyy HH:mm")
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">@Localizer[nameof(Translation.EndDateTime)]</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            @_eventModel.EndDateTime.ToString("dd/MM/yyyy HH:mm")
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">@Localizer[nameof(Translation.MaxRegistrations)]</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            @_eventModel.MaxRegistrations
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">@Localizer[nameof(Translation.CreatedBy)]</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            @_eventModel.CreatedBy
+                        </dd>
+                    </div>
+                    @if (_participants != null)
+                    {
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            @Localizer[nameof(Translation.Participants)]
+                            <span class="ml-2 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                                        @_participants.Count
+                                    </span>
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <ul class="border border-gray-200 rounded-md divide-y divide-gray-200">
+                                @foreach (var participant in _participants)
+                                {
+                                <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                                    <div class="w-0 flex-1 flex items-center">
+                                        <span class="ml-2 flex-1 w-0 truncate">@participant</span>
+                                    </div>
+                                </li>
+                                }
+                            </ul>
+                        </dd>
+                    </div>
+                    }
+                </dl>
+            </div>
+        </div>
+        }
+    </main>
+</div>
+
+@code {
+[Parameter]
+public int Id { get; set; }
+
+private EventModel? _eventModel;
+private List<string>? _participants;
+
+protected override async Task OnInitializedAsync()
+{
+await LoadEventData();
+}
+
+private async Task LoadEventData()
+{
+try
+{
+_eventModel = await Http.GetFromJsonAsync<EventModel>($"api/events/{Id}");
+_participants = await Http.GetFromJsonAsync<List<string>>($"api/events/{Id}/participants");
+}
+catch (Exception ex)
+{
+await JsRuntime.InvokeVoidAsync("alert",
+$"{Localizer[nameof(Translation.LoadError)]}: {ex.Message}");
+}
+}
+
+private async Task Subscribe()
+{
+try
+{
+var response = await Http.PostAsync($"api/events/{Id}/subscribe", null);
+var message = response.IsSuccessStatusCode
+? Localizer[nameof(Translation.SubscriptionSuccess)]
+: Localizer[nameof(Translation.SubscriptionError)];
+
+await JsRuntime.InvokeVoidAsync("alert", message);
+
+if (response.IsSuccessStatusCode)
+{
+await LoadEventData();
+}
+}
+catch (Exception ex)
+{
+await JsRuntime.InvokeVoidAsync("alert",
+$"{Localizer[nameof(Translation.SubscriptionError)]}: {ex.Message}");
+}
+}
+
+private void GoBack()
+{
+NavigationManager.NavigateTo("/events");
+}
+}

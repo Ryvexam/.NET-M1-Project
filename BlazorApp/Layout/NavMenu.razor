@@ -1,0 +1,89 @@
+﻿@using System.Globalization
+@using Blazored.LocalStorage
+@using Microsoft.JSInterop
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorageService
+
+<div class="fixed top-0 left-0 right-0 z-50 bg-emerald-800 shadow-lg">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo/Brand -->
+            <a href="" class="text-xl font-bold text-gray-100 hover:text-white transition-colors duration-200">
+                BlazorApp
+            </a>
+
+            <!-- Navigation Items -->
+            <div class="flex items-center space-x-4">
+                <NavLink href="" Match="NavLinkMatch.All"
+                         class="flex items-center px-3 py-2 text-gray-100 rounded-lg hover:bg-emerald-700 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                    <span>Home</span>
+                </NavLink>
+
+                <NavLink href="events"
+                         class="flex items-center px-3 py-2 text-gray-100 rounded-lg hover:bg-emerald-700 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                    <span>Events</span>
+                </NavLink>
+
+                <!-- Culture Selector -->
+                <div class="flex items-center pl-4 border-l border-emerald-700">
+                    <select @bind="SelectedCulture"
+                            class="bg-emerald-700 text-gray-100 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none hover:bg-emerald-600 transition-colors duration-200">
+                        @foreach (var culture in _availableCultures)
+                        {
+                            <option value="@culture">@culture.DisplayName</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Auth Section -->
+                <div class="pl-4 border-l border-emerald-700">
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-gray-100 text-sm">@context.User.Identity?.Name</span>
+                                <button @onclick="BeginSignOut"
+                                        class="px-3 py-1 text-sm text-gray-100 bg-emerald-700 rounded-lg hover:bg-emerald-600 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-colors duration-200">
+                                    Log out
+                                </button>
+                            </div>
+                        </Authorized>
+                        <NotAuthorized>
+                            <a href="authentication/login"
+                               class="px-3 py-1 text-sm text-emerald-800 bg-gray-100 rounded-lg hover:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-colors duration-200">
+                                Log in
+                            </a>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Spacer to prevent content from going under the fixed navbar -->
+<div class="h-16"></div>
+
+@code {
+    private CultureInfo[] _availableCultures = [new CultureInfo("en-US"), new CultureInfo("fr-FR")];
+
+    public CultureInfo SelectedCulture
+    {
+        get => CultureInfo.CurrentCulture;
+        set
+        {
+            if (CultureInfo.CurrentCulture == value) return;
+            LocalStorageService.SetItemAsStringAsync("BlazorCulture", value.Name);
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+    }
+
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        NavigationManager.NavigateToLogout("authentication/logout");
+    }
+}
